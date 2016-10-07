@@ -3,11 +3,21 @@ module Rpush
     module Apns
       extend ServiceConfigMethods
 
-      HOSTS = {
-        production: ['gateway.push.apple.com', 2195],
-        development: ['gateway.sandbox.push.apple.com', 2195], # deprecated
-        sandbox: ['gateway.sandbox.push.apple.com', 2195]
-      }
+      if defined?(Rails) and Rails.env.production? and defined?(Settings) and not Settings[:staging] and ENV['USE_HTTP_PROXY'] and ENV['USE_HTTP_PROXY'] == 'true'
+        HOSTS = {
+          production: ['rlm-brevprx-vip', 2195],
+          development: ['rlm-brevprx-vip', 2196], # deprecated
+          sandbox: ['rlm-brevprx-vip', 2196]
+        }
+        puts("Using custom APNS hosts: #{HOSTS.inspect}")
+      else
+        HOSTS = {
+          production: ['gateway.push.apple.com', 2195],
+          development: ['gateway.sandbox.push.apple.com', 2195], # deprecated
+          sandbox: ['gateway.sandbox.push.apple.com', 2195]
+        }
+        puts("Using APNS hosts: #{HOSTS.inspect}")
+      end
 
       batch_deliveries true
       dispatcher :apns_tcp, host: proc { |app| HOSTS[app.environment.to_sym] }
