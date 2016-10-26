@@ -3,7 +3,7 @@ module Rpush
     module Apns
       extend ServiceConfigMethods
 
-      if defined?(Rails) and Rails.env.production? and defined?(Settings) and not Settings[:staging] and ENV['USE_HTTP_PROXY'] and ENV['USE_HTTP_PROXY'] == 'true'
+      if defined?(Rails) and Rails.env.production? and defined?(Settings) and not Settings[:staging] and ENV['USE_CUSTOM_APNS_HOSTS'] and ENV['USE_CUSTOM_APNS_HOSTS'] == 'true'
         HOSTS = {
           production: ['rlm-brevprx-vip', 2195],
           development: ['rlm-brevprx-vip', 2196], # deprecated
